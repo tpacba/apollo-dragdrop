@@ -81,7 +81,7 @@ const resolvers = {
             const response = await newUser.save();
 
             const token = jwt.sign(
-                { id: user.id, email: user.email, username: user.username },
+                { id: response.id, email: response.email, username: response.username },
                 SECRET_KEY,
                 { expiresIn: "1h" }
             )
@@ -89,6 +89,37 @@ const resolvers = {
             return {
                 ...response._doc,
                 id: response._id,
+                token
+            }
+        },
+        async login(_, { username, password }) {
+            const { errors, valid } = validateLoginInput(username, password);
+
+            if(!valid) {
+                throw new UserInputError("Errors detected", { errors });
+            }
+
+            const user = await User.findOne({ username });
+            if(!user) {
+                errors.general = "User not found";
+                throw new UserInputError("User is not found", { errors })
+            }
+
+            const match = await bcrypt.compare(password, user.password);
+            if(!match) {
+                errors.general = "Wrong password";
+                throw new UserInputError("Password is wrong", { errors })            
+            }
+
+            const token = jwt.sign(
+                { id: user.id, email: user.email, username: user.username },
+                SECRET_KEY,
+                { expiresIn: "1h" }
+            )
+
+            return {
+                ...user._doc,
+                id: user._id,
                 token
             }
         }
