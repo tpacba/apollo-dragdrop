@@ -7,6 +7,7 @@ const typeDefs = gql`
         mimetype: String!
         path: String!
         post: String!
+        createdAt: String!
     }
     type Query {
         sayHello: String!

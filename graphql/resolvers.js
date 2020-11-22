@@ -20,7 +20,7 @@ async function processUpload(upload, post) {
     const stream = createReadStream();
     const file = await storeUpload({ stream, filename, mimetype });
     file.post = post;
-    console.log(typeof file, file);
+    file.createdAt = new Date().toISOString();
     return file;
 };
 
@@ -42,6 +42,7 @@ const resolvers = {
                 }
             })
             const upload = await processUpload(file, post);
+            await File.create(upload);
             return upload;
         }
     }
