@@ -15,10 +15,12 @@ async function storeUpload({ stream, filename, mimetype }) {
     });
 };
 
-async function processUpload(upload) {
+async function processUpload(upload, post) {
     const { createReadStream, filename, mimetype } = await upload;
     const stream = createReadStream();
     const file = await storeUpload({ stream, filename, mimetype });
+    file.post = post;
+    console.log(typeof file, file);
     return file;
 };
 
@@ -33,13 +35,13 @@ const resolvers = {
         }
     },
     Mutation: {
-        async uploadFile(_, { file }) {
+        async uploadFile(_, { file, post}) {
             mkdir("images", { recursive: true }, (error) => {
                 if (error) {
                     throw error;
                 }
             })
-            const upload = await processUpload(file);
+            const upload = await processUpload(file, post);
             return upload;
         }
     }

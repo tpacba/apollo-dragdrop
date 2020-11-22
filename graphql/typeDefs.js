@@ -6,13 +6,14 @@ const typeDefs = gql`
         filename: String!
         mimetype: String!
         path: String!
+        post: String!
     }
     type Query {
         sayHello: String!
         readFiles: [File!]
     }
     type Mutation {
-        uploadFile(file: Upload!): File
+        uploadFile(file: Upload!, post: String!): File
     }
 `;
 
