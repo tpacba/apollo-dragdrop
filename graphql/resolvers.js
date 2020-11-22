@@ -1,6 +1,10 @@
 const shortid = require('shortid');
 const { createWriteStream, mkdir } = require('fs');
 
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { SECRET_KEY } = require('../config');
+
 const File = require('../models/fileModel');
 const User = require('../models/userModel');
 
@@ -40,7 +44,7 @@ const resolvers = {
         }
     },
     Mutation: {
-        async uploadFile(_, { file, post}) {
+        async uploadFile(_, { file, post }) {
             mkdir("images", { recursive: true }, (error) => {
                 if (error) {
                     throw error;
@@ -50,10 +54,42 @@ const resolvers = {
             await File.create(upload);
             return upload;
         },
-        async register(_, { registerInput: { username, password, confirmPassword, email }}) {
+        async register(_, { registerInput: { username, password, confirmPassword, email } }) {
             const { errors, valid } = validateRegisterInput(username, password, confirmPassword, email);
             if (!valid) {
                 throw new UserInputError("Errors detected", { errors });
+            }
+
+            const user = await User.findOne({ username });
+            if (user) {
+                throw new UserInputError("This username is taken.", {
+                    errors: {
+                        username: "This username is taken."
+                    }
+                })
+            }
+
+            password = await bcrypt.hash(password, 12);
+
+            const newUser = new User({
+                username,
+                password,
+                email,
+                createdAt: new Date().toISOString()
+            })
+
+            const response = await newUser.save();
+
+            const token = jwt.sign(
+                { id: user.id, email: user.email, username: user.username },
+                SECRET_KEY,
+                { expiresIn: "1h" }
+            )
+
+            return {
+                ...response._doc,
+                id: response._id,
+                token
             }
         }
     }
