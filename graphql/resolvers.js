@@ -2,6 +2,11 @@ const shortid = require('shortid');
 const { createWriteStream, mkdir } = require('fs');
 
 const File = require('../models/fileModel');
+const User = require('../models/userModel');
+
+const { validateLoginInput, validateRegisterInput } = require('../utils/validators');
+
+const { UserInputError } = require('apollo-server');
 
 async function storeUpload({ stream, filename, mimetype }) {
     const id = shortid.generate();
@@ -44,6 +49,12 @@ const resolvers = {
             const upload = await processUpload(file, post);
             await File.create(upload);
             return upload;
+        },
+        async register(_, { registerInput: { username, password, confirmPassword, email }}) {
+            const { errors, valid } = validateRegisterInput(username, password, confirmPassword, email);
+            if (!valid) {
+                throw new UserInputError("Errors detected", { errors });
+            }
         }
     }
 }
