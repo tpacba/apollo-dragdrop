@@ -6,6 +6,7 @@ const fileSchema = new Schema({
     path: String,
     post: String,
     createdAt: String,
+    username: String
 });
 
 module.exports = model("File", fileSchema);

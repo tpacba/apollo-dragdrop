@@ -25,11 +25,12 @@ async function storeUpload({ stream, filename, mimetype }) {
     });
 };
 
-async function processUpload(upload, post) {
+async function processUpload(upload, post, username) {
     const { createReadStream, filename, mimetype } = await upload;
     const stream = createReadStream();
     const file = await storeUpload({ stream, filename, mimetype });
     file.post = post;
+    file.username = username;
     file.createdAt = new Date().toISOString();
     return file;
 };
@@ -43,9 +44,8 @@ const resolvers = {
                 throw new Error(error)
             }
         },
-        async readFiles(_, {}, context) {
+        async readFiles(_, __, context) {
             const user = checkAuth(context);
-            console.log(user);
 
             try {
                 const files = await File.find({ username: user.username }).sort({ createdAt: -1});
@@ -57,13 +57,15 @@ const resolvers = {
         }
     },
     Mutation: {
-        async uploadFile(_, { file, post }) {
+        async uploadFile(_, { file, post }, context) {
+            const user = checkAuth(context);
+
             mkdir("images", { recursive: true }, (error) => {
                 if (error) {
                     throw error;
                 }
             })
-            const upload = await processUpload(file, post);
+            const upload = await processUpload(file, post, user.username);
             await File.create(upload);
             return upload;
         },

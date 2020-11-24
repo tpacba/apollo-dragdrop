@@ -8,6 +8,7 @@ const typeDefs = gql`
         path: String!
         post: String!
         createdAt: String!
+        username: String!
     }
     type User {
         id: ID!
