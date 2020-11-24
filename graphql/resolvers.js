@@ -1,5 +1,5 @@
 const shortid = require('shortid');
-const { createWriteStream, mkdir } = require('fs');
+const { createWriteStream, mkdir, readFile } = require('fs');
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -9,6 +9,7 @@ const File = require('../models/fileModel');
 const User = require('../models/userModel');
 
 const { validateLoginInput, validateRegisterInput } = require('../utils/validators');
+const checkAuth = require('../utils/check-auth');
 
 const { UserInputError } = require('apollo-server');
 
@@ -40,6 +41,18 @@ const resolvers = {
                 return "Hello world!"
             } catch (error) {
                 throw new Error(error)
+            }
+        },
+        async readFiles(_, {}, context) {
+            const user = checkAuth(context);
+            console.log(user);
+
+            try {
+                const files = await File.find({ username: user.username }).sort({ createdAt: -1});
+                console.log(files);
+                return files;
+            } catch (error) {
+                throw new Error(error);
             }
         }
     },

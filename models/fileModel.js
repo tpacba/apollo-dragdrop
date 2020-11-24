@@ -5,7 +5,7 @@ const fileSchema = new Schema({
     mimetype: String,
     path: String,
     post: String,
-    createdAt: String
+    createdAt: String,
 });
 
 module.exports = model("File", fileSchema);
