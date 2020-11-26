@@ -1,6 +1,5 @@
 import React, { useReducer, createContext } from 'react';
 import jwtDecode from 'jwt-decode';
-import PropTypes from 'prop-types';
 
 const initialState = {
     user: null
@@ -69,7 +68,5 @@ const AuthProvider = (props) => {
         </AuthContext.Provider>
     );
 };
-
-AuthProvider.propTypes = {};
 
 export { AuthProvider, AuthContext };

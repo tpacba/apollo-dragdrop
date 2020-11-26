@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Register = () => {
+const Login = () => {
     return (
         <div>
             
@@ -9,6 +9,6 @@ const Register = () => {
     );
 };
 
-Register.propTypes = {};
+Login.propTypes = {};
 
-export default Register;
+export default Login;
