@@ -38,7 +38,7 @@ const Login = (props) => {
         },
         onError(error) {
             console.log(error);
-            setErrors(error.graphQLErrors[0].extensions.exception.errors)
+            setErrors(error.graphQLErrors[0].extensions.exception.errors);
         },
         variables: values
     });
