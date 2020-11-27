@@ -30,10 +30,11 @@ const Login = (props) => {
 
     const [loginUser, { loading }] = useMutation(LOGIN_USER, {
         update(_, result) {
-
+            context.login(result.data.login);
+            props.history.push("/");
         },
         onError(error) {
-
+            setErrors(error.graphQLErrors[0].extensions.exception.errors)
         },
         variables: values
     });
@@ -49,7 +50,6 @@ const Login = (props) => {
 
     return (
         <div>
-            
         </div>
     );
 };
