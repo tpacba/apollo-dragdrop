@@ -15,52 +15,50 @@ const MenuBar = () => {
         setActiveItem(name);
     };
 
-    const logoutButton =
-        <Menu pointing secondary size="massive" color="red">
-            <Menu.Item
-                name={user.username}
-                active
-                as={Link}
-                to="/"
-            />
-            <Menu.Menu position='right'>
-                <Menu.Item
-                    name='logout'
-                    onClick={logout}
-                />
-            </Menu.Menu>
-        </Menu>;
-
-    const loginAndRegisterButton =
-        <Menu pointing secondary size="massive" color="red">
-            <Menu.Item
-                name='home'
-                active={activeItem === 'home'}
-                onClick={handleItemClick}
-                as={Link}
-                to="/"
-            />
-            <Menu.Menu position='right'>
-                <Menu.Item
-                    name='login'
-                    active={activeItem === 'login'}
-                    onClick={handleItemClick}
-                    as={Link}
-                    to="/login"
-                />
-                <Menu.Item
-                    name='register'
-                    active={activeItem === 'register'}
-                    onClick={handleItemClick}
-                    as={Link}
-                    to="/register"
-                />
-            </Menu.Menu>
-        </Menu>;
-
     return (
         <div>
-            {user ? (logoutButton) : (loginAndRegisterButton)}
+            {user ?
+                (<Menu pointing secondary size="massive" color="red">
+                    <Menu.Item
+                        name={user.username}
+                        active
+                        as={Link}
+                        to="/"
+                    />
+                    <Menu.Menu position='right'>
+                        <Menu.Item
+                            name='logout'
+                            onClick={logout}
+                        />
+                    </Menu.Menu>
+                </Menu>)
+                :
+                (<Menu pointing secondary size="massive" color="red">
+                    <Menu.Item
+                        name='home'
+                        active={activeItem === 'home'}
+                        onClick={handleItemClick}
+                        as={Link}
+                        to="/"
+                    />
+                    <Menu.Menu position='right'>
+                        <Menu.Item
+                            name='login'
+                            active={activeItem === 'login'}
+                            onClick={handleItemClick}
+                            as={Link}
+                            to="/login"
+                        />
+                        <Menu.Item
+                            name='register'
+                            active={activeItem === 'register'}
+                            onClick={handleItemClick}
+                            as={Link}
+                            to="/register"
+                        />
+                    </Menu.Menu>
+                </Menu>)
+            }
         </div>
     );
 };
