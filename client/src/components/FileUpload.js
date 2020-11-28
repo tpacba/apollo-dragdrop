@@ -1,13 +1,28 @@
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import PropTypes from 'prop-types';
+import gql from 'graphql-tag';
+
+const UPLOAD_MUTATION = gql`
+    mutation uploadFile($file: Upload!, $post: String!) {
+        uploadFile(file: $file, post: $post) {
+            id
+            filename
+            mimetype
+            path
+            post
+            createdAt
+            username
+        }
+    }
+`
 
 const FileUpload = () => {
     const onDrop = useCallback((acceptedFiles) => {
+
         console.log(acceptedFiles);
     }, [])
 
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
     return (
         <>
@@ -18,7 +33,5 @@ const FileUpload = () => {
         </>
     );
 };
-
-FileUpload.propTypes = {};
 
 export default FileUpload;

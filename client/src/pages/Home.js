@@ -1,14 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
+import FileUpload from '../components/FileUpload';
 const Home = () => {
     return (
         <div>
-            
+            <FileUpload></FileUpload>
         </div>
     );
 };
-
-Home.propTypes = {};
 
 export default Home;
